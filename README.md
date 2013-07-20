@@ -1,16 +1,17 @@
 Kouch was based [RaspberryPi TV](https://github.com/DonaldDerek/RaspberryPiTV) and inspired [Screeninvader](https://github.com/Metalab/ScreenInvader) 
 
-#Dependencies
+Dependencies
 ---------------
 - node
 - mplayer
+- youtube-dl
 
-##License
+License
 ----------
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Donald Derek Haddad 
+Copyright (c) 2013 Zerocity
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
