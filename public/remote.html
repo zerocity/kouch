@@ -56,7 +56,8 @@
 	
 	<script>	 
 		
-	  	var socket = io.connect('http://127.0.0.1:8080'); 
+	  	//var socket = io.connect('http://127.0.0.1:8080'); 
+	  	var socket = io.connect('http://192.168.178.81:8080'); 
 	  //var socket = io.connect('http://raspberrypi.local:8080/');
 	    socket.on('connect', function(data){
 	  	socket.emit('remote');
@@ -114,12 +115,12 @@
 		$$(".r-header").tap(function(){
 			socket.emit('controll',{action:"tap"}); 
 			$(".app-body").fadeToggle("fast", function () {});	
-			$.get('http://127.0.0.1:8080/omx/quit',function(data){
+			$.get('http://192.168.178.81:8080/omx/quit',function(data){
 				console.log(data);
 			});
 		});
 		$$(".app-body").tap(function(){
-			$.get('http://127.0.0.1:8080/omx/pause',function(data){
+			$.get('http://192.168.178.81:8080/omx/pause',function(data){
 				console.log(data);
 			});
 		});

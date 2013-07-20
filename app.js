@@ -18,7 +18,7 @@ function mediaPlayerStart(youtubeUrl) {
   
   mplayer.stdout.on('data', function (data) {
     // send commands
-    mplayer.stdin.write('\nmute')
+    //mplayer.stdin.write('\nmute')
   });
 };
 
@@ -71,15 +71,6 @@ server.listen(app.get('port'), function(){
 });
 
 var ss;
-
-//Run and pipe shell script output
-function run_shell(cmd, args, cb, end) {
-    var spawn = require('child_process').spawn,
-        child = spawn(cmd, args),
-        me = this;
-    child.stdout.on('data', function (buffer) { cb(me, buffer); });
-    child.stdout.on('end', end);
-}
 
 //Socket.io Server
 io.sockets.on('connection', function (socket) {
