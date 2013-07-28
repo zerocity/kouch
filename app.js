@@ -7,16 +7,16 @@ var express = require('express')
   , server = require('http').createServer(app)
   , path = require('path')
   , io = require('socket.io').listen(server)
-  , spawn = require('child_process').spawn
+  //  , spawn = require('child_process').spawn
   , cp = require('child_process')
   , omx = require('omxcontrol');
 
 
 function mediaPlayerStart(youtubeUrl) {
   var mplayer = cp.spawn('mplayer',['-slave','-fs',youtubeUrl.trim()]);
-  //console.log(mplayer.pid);
-  
-  mplayer.stdout.on('data', function (data) {
+  //var player = cp.spawn('omxplayer',[youtubeUrl.trim()]);
+    
+  player.stdout.on('data', function (data) {
     // send commands
     //mplayer.stdin.write('\nmute')
   });
@@ -58,11 +58,6 @@ app.get('/remote', function (req, res) {
   res.sendfile(__dirname + '/public/remote.html');
 });
 
-app.get('/play/:video_id', function (req, res) {
-
-});
-
-
 //Socket.io Config
 io.set('log level', 1);
 
@@ -84,8 +79,6 @@ io.sockets.on('connection', function (socket) {
    socket.type = "remote";
    console.log("Remote ready...");
  });
-
-
 
  socket.on("controll", function(data){
 	console.log(data);
@@ -113,10 +106,8 @@ io.sockets.on('connection', function (socket) {
 
     if( data.action === "play"){
     var id = data.video_id,
-         url = "http://www.youtube.com/watch?v="+id;
-
-      youtube(url)
-
+        url = "http://www.youtube.com/watch?v="+id;
+        youtube(url)
     }
 
  });
