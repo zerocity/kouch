@@ -13,7 +13,7 @@ var express = require('express')
 
 
 function mediaPlayerStart(youtubeUrl) {
-  var mplayer = cp.spawn('mplayer',['-slave','-fs',youtubeUrl.trim()]);
+  var player = cp.spawn('mplayer',['-slave','-fs',youtubeUrl.trim()]);
   //var player = cp.spawn('omxplayer',[youtubeUrl.trim()]);
     
   player.stdout.on('data', function (data) {
@@ -83,22 +83,7 @@ io.sockets.on('connection', function (socket) {
  socket.on("controll", function(data){
 	console.log(data);
    if(socket.type === "remote"){
-
-     if(data.action === "tap"){
-         if(ss != undefined){
-            ss.emit("controlling", {action:"enter"});
-            }
-     }
-     else if(data.action === "swipeLeft"){
-      if(ss != undefined){
-          ss.emit("controlling", {action:"goLeft"});
-          }
-     }
-     else if(data.action === "swipeRight"){
-       if(ss != undefined){
-           ss.emit("controlling", {action:"goRight"});
-           }
-     }
+      console.log(data);
    }
  });
 
