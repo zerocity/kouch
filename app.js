@@ -1,21 +1,18 @@
-/**
- * Module dependencies.
- */
-
 var express = require('express')
   , app = express()  
   , server = require('http').createServer(app)
   , path = require('path')
   , io = require('socket.io').listen(server)
-  //  , spawn = require('child_process').spawn
   , cp = require('child_process')
   , omx = require('omxcontrol');
 
+var Datastore = require('nedb')
+  , db = new Datastore({ filename: 'tardis', autoload: true });
 
 function mediaPlayerStart(youtubeUrl) {
-  var player = cp.spawn('mplayer',['-slave','-fs',youtubeUrl.trim()]);
-  //var player = cp.spawn('omxplayer',[youtubeUrl.trim()]);
-    
+  var player = cp.spawn('mplayer',['-slave','-cache','16384','-fs',youtubeUrl.trim()]);
+  //var player = cp.spawn('omxplayer',[youtubeUrl.trim()]);16384
+    console.log('### START PLAYER ###');
   player.stdout.on('data', function (data) {
     // send commands
     //mplayer.stdin.write('\nmute')
@@ -23,7 +20,8 @@ function mediaPlayerStart(youtubeUrl) {
 };
 
 function youtube(mediaUrl) {
-  cp.exec('youtube-dl -g '+mediaUrl,function (error, stdout, stderr,stdin) {
+  cp.exec('youtube-dl -g -f 34/35/45/84 '+mediaUrl,function (error, stdout, stderr,stdin) {
+    // -f choise prefeard video format http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -58,6 +56,14 @@ app.get('/remote', function (req, res) {
   res.sendfile(__dirname + '/public/remote.html');
 });
 
+app.get('/playlist', function (req, res) {
+
+  db.find({}, function (err, docs) {
+    console.log(docs);
+    return res.send(docs);
+  });
+});
+
 //Socket.io Config
 io.set('log level', 1);
 
@@ -75,6 +81,7 @@ io.sockets.on('connection', function (socket) {
    ss = socket;
    console.log("Screen ready...");
  });
+
  socket.on("remote", function(data){
    socket.type = "remote";
    console.log("Remote ready...");
@@ -90,10 +97,22 @@ io.sockets.on('connection', function (socket) {
  socket.on("video", function(data){
 
     if( data.action === "play"){
-    var id = data.video_id,
+    console.log(data);
+
+    var db_id = db.insert(data, function (err, newDoc) {   
+      console.log(newDoc);
+      // Callback is optional
+      // newDoc is the newly inserted document, including its _id
+      // newDoc has no key called notToBeSaved since its value was undefined
+    });
+
+    console.log(db_id);
+
+    var id = data.youtube_id,
         url = "http://www.youtube.com/watch?v="+id;
         youtube(url)
-    }
-
+    };
  });
+
+
 });
